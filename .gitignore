@@ -1,9 +1,14 @@
 # Python
 __pycache__/
 *.pyc
-.env
 venv/
 .venv/
+
+# Env files
+.env
+.env.*
+*.env
+*.env.*
 
 # Node
 node_modules/
