@@ -1,0 +1,14 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+supabase==2.11.0
+openai==1.58.1
+cryptography==44.0.0
+email-validator==2.2.0
+python-dotenv==1.0.1
+pydantic-settings==2.7.1
+sse-starlette==2.2.1
+httpx==0.28.1
+pytest==8.3.4
+pytest-asyncio==0.25.0
+pytest-httpx==0.35.0
+PyJWT==2.10.1
