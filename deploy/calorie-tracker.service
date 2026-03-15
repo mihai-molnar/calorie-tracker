@@ -1,0 +1,15 @@
+[Unit]
+Description=Calorie Tracker FastAPI Backend
+After=network.target
+
+[Service]
+User=clawd
+Group=clawd
+WorkingDirectory=/opt/calorie-tracker/backend
+EnvironmentFile=/opt/calorie-tracker/backend/.env
+ExecStart=/opt/calorie-tracker/backend/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
