@@ -113,14 +113,14 @@ export function Onboarding() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center px-4 bg-gray-50 dark:bg-gray-950">
       <div className="w-full max-w-sm space-y-6">
-        <h1 className="text-xl font-bold text-gray-900 text-center">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 text-center">
           {steps[step].title}
         </h1>
 
         {error && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">{error}</div>
+          <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 text-sm p-3 rounded-lg">{error}</div>
         )}
 
         <div className="space-y-4">
@@ -133,7 +133,7 @@ export function Onboarding() {
                   className={`flex-1 py-3 rounded-lg border font-medium capitalize ${
                     gender === g
                       ? "bg-green-600 text-white border-green-600"
-                      : "bg-white text-gray-700 border-gray-300"
+                      : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600"
                   }`}
                 >
                   {g}
@@ -145,19 +145,19 @@ export function Onboarding() {
           {step === "age" && (
             <input type="number" placeholder="Age in years" value={age}
               onChange={(e) => setAge(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none" />
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none" />
           )}
 
           {step === "height" && (
             <input type="number" placeholder="Height in cm" value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none" />
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none" />
           )}
 
           {step === "weight" && (
             <input type="number" step="0.1" placeholder="Weight in kg" value={weightKg}
               onChange={(e) => setWeightKg(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none" />
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none" />
           )}
 
           {step === "activity" && (
@@ -167,7 +167,7 @@ export function Onboarding() {
                   className={`w-full text-left px-4 py-3 rounded-lg border ${
                     activityLevel === level.value
                       ? "bg-green-600 text-white border-green-600"
-                      : "bg-white text-gray-700 border-gray-300"
+                      : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600"
                   }`}>
                   {level.label}
                 </button>
@@ -179,7 +179,7 @@ export function Onboarding() {
             <div>
               <input type="number" step="0.1" placeholder="Target weight in kg" value={targetWeightKg}
                 onChange={(e) => setTargetWeightKg(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none" />
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none" />
               {targetWeightKg && parseFloat(targetWeightKg) >= parseFloat(weightKg) && (
                 <p className="text-red-500 text-sm mt-2">
                   Target must be less than current weight ({weightKg} kg)
@@ -190,15 +190,15 @@ export function Onboarding() {
 
           {step === "review" && calorieTarget && (
             <div className="space-y-4">
-              <div className="bg-green-50 p-4 rounded-lg text-center">
-                <p className="text-sm text-gray-600">Recommended daily intake</p>
-                <p className="text-3xl font-bold text-green-700">{calorieTarget} kcal</p>
+              <div className="bg-green-50 dark:bg-green-950 p-4 rounded-lg text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-400">Recommended daily intake</p>
+                <p className="text-3xl font-bold text-green-700 dark:text-green-400">{calorieTarget} kcal</p>
               </div>
               <div>
-                <label className="text-sm text-gray-600">Override (min 1200 kcal):</label>
+                <label className="text-sm text-gray-600 dark:text-gray-400">Override (min 1200 kcal):</label>
                 <input type="number" value={calorieOverride}
                   onChange={(e) => setCalorieOverride(e.target.value)} min={1200}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none mt-1" />
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none mt-1" />
               </div>
             </div>
           )}
@@ -207,8 +207,8 @@ export function Onboarding() {
             <div className="space-y-3">
               <input type="password" placeholder="sk-..." value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none font-mono text-sm" />
-              <p className="text-xs text-gray-500">
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none font-mono text-sm" />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Your API key is encrypted and stored securely. It's only used to
                 make calls to OpenAI on your behalf.
               </p>
@@ -219,7 +219,7 @@ export function Onboarding() {
         <div className="flex gap-3">
           {steps[step].prev && (
             <button onClick={goPrev}
-              className="flex-1 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium">
+              className="flex-1 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 font-medium bg-white dark:bg-gray-800">
               Back
             </button>
           )}

@@ -24,15 +24,15 @@ export function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center px-4 bg-gray-50 dark:bg-gray-950">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-gray-500 mt-1">Start tracking your calories</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Account</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Start tracking your calories</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg">
+            <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 text-sm p-3 rounded-lg">
               {error}
             </div>
           )}
@@ -42,7 +42,7 @@ export function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
           />
           <input
             type="password"
@@ -51,7 +51,7 @@ export function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
           />
           <button
             type="submit"
@@ -61,7 +61,7 @@ export function Register() {
             {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400">
           Already have an account?{" "}
           <Link to="/login" className="text-green-600 hover:underline">
             Log in
