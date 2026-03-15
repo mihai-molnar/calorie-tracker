@@ -27,7 +27,7 @@ export function Chat() {
         weightKg={stats.weightKg}
       />
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 max-w-2xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-4 py-4 max-w-2xl mx-auto w-full">
         {initialLoading && (
           <div className="flex items-center justify-center mt-20">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
