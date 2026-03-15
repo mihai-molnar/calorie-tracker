@@ -2,24 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useChat } from "../hooks/useChat";
 import { StatsBar } from "../components/StatsBar";
 import { ChatMessage } from "../components/ChatMessage";
-import { apiFetch } from "../lib/api";
 
 export function Chat() {
-  const { messages, loading, stats, sendMessage } = useChat();
+  const { messages, loading, initialLoading, stats, sendMessage } = useChat();
   const [input, setInput] = useState("");
-  const [dailyTarget, setDailyTarget] = useState(2000);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function fetchTarget() {
-      const res = await apiFetch("/dashboard");
-      if (res.ok) {
-        const data = await res.json();
-        setDailyTarget(data.today.daily_calorie_target);
-      }
-    }
-    fetchTarget();
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,15 +20,20 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-[calc(100dvh-4rem)]">
       <StatsBar
         totalCalories={stats.totalCalories}
-        dailyTarget={dailyTarget}
+        dailyTarget={stats.dailyTarget}
         weightKg={stats.weightKg}
       />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 max-w-md mx-auto w-full">
-        {messages.length === 0 && (
+        {initialLoading && (
+          <div className="flex items-center justify-center mt-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
+          </div>
+        )}
+        {!initialLoading && messages.length === 0 && (
           <div className="text-center text-gray-400 mt-20">
             <p className="text-lg">Tell me what you ate today</p>
             <p className="text-sm mt-2">
@@ -68,7 +60,7 @@ export function Chat() {
 
       <form
         onSubmit={handleSubmit}
-        className="border-t border-gray-200 bg-white px-4 py-3 mb-16"
+        className="border-t border-gray-200 bg-white px-4 py-3"
       >
         <div className="flex gap-2 max-w-md mx-auto">
           <input

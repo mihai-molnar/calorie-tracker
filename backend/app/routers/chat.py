@@ -122,6 +122,50 @@ def _apply_data_changes(supabase: Client, user_id: str, daily_log_id: str, data)
     _recalculate_total_calories(supabase, daily_log_id)
 
 
+@router.get("/chat/history")
+async def chat_history(
+    user_id: str = Depends(get_current_user),
+    supabase: Client = Depends(get_supabase),
+):
+    """Return today's chat messages and current stats."""
+    date = _get_user_date(supabase, user_id)
+    daily_log = _get_or_create_daily_log(supabase, user_id, date)
+    daily_log_id = daily_log["id"]
+
+    messages = (
+        supabase.table("chat_messages")
+        .select("role, content")
+        .eq("daily_log_id", daily_log_id)
+        .order("created_at")
+        .execute()
+    ).data
+
+    # Strip JSON blocks from assistant messages for display
+    from app.services.llm import parse_llm_response
+    display_messages = []
+    for msg in messages:
+        if msg["role"] == "assistant":
+            text, _ = parse_llm_response(msg["content"])
+            display_messages.append({"role": "assistant", "content": text})
+        else:
+            display_messages.append(msg)
+
+    profile = (
+        supabase.table("user_profiles")
+        .select("daily_calorie_target")
+        .eq("user_id", user_id)
+        .single()
+        .execute()
+    )
+
+    return {
+        "messages": display_messages,
+        "total_calories": daily_log.get("total_calories", 0),
+        "weight_kg": daily_log.get("weight_kg"),
+        "daily_calorie_target": profile.data["daily_calorie_target"],
+    }
+
+
 @router.post("/chat")
 async def chat(
     body: ChatRequest,

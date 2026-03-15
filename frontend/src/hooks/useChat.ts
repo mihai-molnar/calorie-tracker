@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { apiFetch } from "../lib/api";
 
 export interface ChatMessage {
@@ -9,17 +9,42 @@ export interface ChatMessage {
 interface ChatStats {
   totalCalories: number;
   weightKg: number | null;
+  dailyTarget: number;
 }
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [stats, setStats] = useState<ChatStats>({
     totalCalories: 0,
     weightKg: null,
+    dailyTarget: 2000,
   });
   const statsRef = useRef(stats);
   statsRef.current = stats;
+
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const res = await apiFetch("/chat/history");
+        if (res.ok) {
+          const data = await res.json();
+          setMessages(data.messages);
+          setStats({
+            totalCalories: data.total_calories ?? 0,
+            weightKg: data.weight_kg ?? null,
+            dailyTarget: data.daily_calorie_target ?? statsRef.current.dailyTarget,
+          });
+        }
+      } catch {
+        // ignore - will start with empty chat
+      } finally {
+        setInitialLoading(false);
+      }
+    }
+    loadHistory();
+  }, []);
 
   const sendMessage = useCallback(async (text: string) => {
     const userMsg: ChatMessage = { role: "user", content: text };
@@ -71,6 +96,7 @@ export function useChat() {
                 setStats({
                   totalCalories: data.total_calories ?? statsRef.current.totalCalories,
                   weightKg: data.weight_kg ?? statsRef.current.weightKg,
+                  dailyTarget: statsRef.current.dailyTarget,
                 });
               }
             } catch {
@@ -90,5 +116,5 @@ export function useChat() {
     }
   }, []);
 
-  return { messages, loading, stats, sendMessage };
+  return { messages, loading, initialLoading, stats, sendMessage };
 }
