@@ -125,6 +125,19 @@ bash deploy/deploy.sh
 
 This installs nginx, clones the repo, sets up a Python venv, builds the frontend, and configures systemd + nginx.
 
+To update after pushing changes:
+
+```bash
+# Full redeploy (frontend + backend)
+cd /opt/calorie-tracker && bash deploy/deploy.sh
+
+# Backend only (no frontend rebuild needed)
+cd /opt/calorie-tracker && git pull && sudo systemctl restart calorie-tracker
+
+# Frontend only (no backend restart needed)
+cd /opt/calorie-tracker && git pull && cd frontend && npm run build
+```
+
 ## Project Structure
 
 ```
