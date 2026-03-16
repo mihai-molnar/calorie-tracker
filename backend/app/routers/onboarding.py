@@ -1,3 +1,6 @@
+import datetime as dt
+from zoneinfo import ZoneInfo
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
 from supabase import Client
@@ -69,6 +72,13 @@ async def onboarding(
         "daily_calorie_target": calorie_target,
         "timezone": body.timezone, "onboarding_completed": True,
     }).execute()
+
+    # Create a daily_log entry with the starting weight
+    today = dt.datetime.now(ZoneInfo(body.timezone)).strftime("%Y-%m-%d")
+    supabase.table("daily_logs").upsert(
+        {"user_id": user_id, "date": today, "weight_kg": body.weight_kg, "total_calories": 0},
+        on_conflict="user_id,date",
+    ).execute()
 
     encrypted = encrypt_api_key(body.openai_api_key)
     supabase.table("user_api_keys").upsert({
