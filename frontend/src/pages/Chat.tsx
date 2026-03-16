@@ -20,7 +20,7 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-4rem-env(safe-area-inset-bottom,0px))] md:h-dvh">
+    <div className="flex flex-col h-[calc(100dvh-4rem)] md:h-dvh">
       <StatsBar
         totalCalories={stats.totalCalories}
         dailyTarget={stats.dailyTarget}

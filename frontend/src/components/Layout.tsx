@@ -108,7 +108,7 @@ export function Layout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0 md:ml-56">
+      <main className="flex-1 pb-16 md:pb-0 md:ml-56">
         <Outlet />
       </main>
 
