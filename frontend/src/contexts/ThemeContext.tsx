@@ -26,9 +26,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     const applyThemeColor = (dark: boolean) => {
       const color = dark ? "#030712" : "#f9fafb";
-      document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((el) => {
-        el.setAttribute("content", color);
-      });
+      const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", color);
     };
 
     if (theme === "system") {
