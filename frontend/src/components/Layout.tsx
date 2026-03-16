@@ -113,7 +113,7 @@ export function Layout() {
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] z-10">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-2 z-10">
         <div className="flex justify-around items-center max-w-md mx-auto">
           {navItems.map((item) => (
             <NavLink
