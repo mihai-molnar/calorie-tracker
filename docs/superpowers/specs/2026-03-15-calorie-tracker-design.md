@@ -113,7 +113,7 @@ Backend-centric LLM approach: all LLM calls go through the FastAPI backend. The 
 - `POST /auth/logout` — Revoke Supabase session
 
 ### Onboarding
-- `POST /onboarding` — Save profile data, auto-calculate calorie target (Mifflin-St Jeor formula + caloric deficit based on target weight), mark onboarding complete
+- `POST /onboarding` — Save profile data, auto-calculate calorie target (Mifflin-St Jeor formula + caloric deficit based on target weight), mark onboarding complete, create initial daily_log entry with starting weight
 
 ### Chat (Core Feature)
 - `GET /chat/history` — Load today's chat messages and stats (total_calories, weight_kg, daily_calorie_target). Assistant messages are returned with JSON blocks stripped for display.
