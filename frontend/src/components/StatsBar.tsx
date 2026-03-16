@@ -10,7 +10,7 @@ export function StatsBar({ totalCalories, dailyTarget, weightKg }: StatsBarProps
   const isOver = totalCalories > dailyTarget;
 
   return (
-    <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+    <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-2">
           <div>

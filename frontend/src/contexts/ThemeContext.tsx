@@ -24,11 +24,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
 
+    const applyThemeColor = (dark: boolean) => {
+      const color = dark ? "#030712" : "#f9fafb";
+      document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((el) => {
+        el.setAttribute("content", color);
+      });
+    };
+
     if (theme === "system") {
       const media = window.matchMedia("(prefers-color-scheme: dark)");
       const update = () => {
         setIsDark(media.matches);
         root.classList.toggle("dark", media.matches);
+        applyThemeColor(media.matches);
       };
       update();
       media.addEventListener("change", update);
@@ -37,6 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const dark = theme === "dark";
       setIsDark(dark);
       root.classList.toggle("dark", dark);
+      applyThemeColor(dark);
     }
   }, [theme]);
 
