@@ -21,7 +21,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
       setOnboardingChecked(true);
     }
     checkOnboarding();
-  }, [session]);
+  }, [session, location.pathname]);
 
   if (loading || (session && !onboardingChecked)) {
     return (
