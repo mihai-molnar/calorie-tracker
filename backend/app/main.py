@@ -22,7 +22,6 @@ app.include_router(dashboard.router)
 app.include_router(food_entries.router)
 
 
-
 @app.get("/health")
 async def health():
     return {"status": "ok"}
