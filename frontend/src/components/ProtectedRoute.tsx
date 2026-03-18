@@ -11,6 +11,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!session) return;
+    setOnboardingChecked(false);
     async function checkOnboarding() {
       try {
         const res = await apiFetch("/dashboard");
