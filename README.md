@@ -11,7 +11,7 @@ Instead of searching food databases and filling out forms, you just chat:
 - *"thinking about ordering a caesar salad, what do you think?"* — estimates calories without logging
 - *"I'm 89.2 kg today"* — records your weight
 
-The LLM handles natural language parsing, calorie estimation, and conversational context. You bring your own OpenAI API key.
+The LLM handles natural language parsing, calorie estimation, and conversational context. The OpenAI API key is managed server-side via an environment variable.
 
 ## Tech Stack
 
@@ -32,7 +32,6 @@ The LLM handles natural language parsing, calorie estimation, and conversational
 - Responsive layout (mobile bottom nav + desktop sidebar)
 - PWA — installable on mobile
 - Chat history persists across navigation
-- API keys encrypted at rest (Fernet)
 - Row-Level Security on all tables
 
 ## Getting Started
@@ -42,7 +41,7 @@ The LLM handles natural language parsing, calorie estimation, and conversational
 - Node.js 18+
 - Python 3.12+
 - A [Supabase](https://supabase.com) project
-- An [OpenAI](https://platform.openai.com) API key
+- An [OpenAI](https://platform.openai.com) API key (set as `OPENAI_API_KEY` env var on the server)
 
 ### 1. Clone
 
@@ -74,11 +73,7 @@ Create `.env` from the example:
 cp .env.example .env
 ```
 
-Fill in your Supabase credentials and generate a Fernet encryption key:
-
-```bash
-python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-```
+Fill in your Supabase credentials and set `OPENAI_API_KEY` to your OpenAI API key.
 
 ### 4. Frontend
 
@@ -152,10 +147,9 @@ backend/
       chat.py            # LLM chat + SSE + rate limiting
       dashboard.py       # Stats + history
       food_entries.py    # Manual calorie corrections
-      settings.py        # API key update
+      settings.py        # User settings
     services/
       calorie.py         # BMR / TDEE / daily target
-      crypto.py          # Fernet encrypt/decrypt
       llm.py             # Prompt builder + response parser
     tests/               # 17 unit tests
 

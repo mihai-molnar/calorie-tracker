@@ -18,7 +18,7 @@ Solo user initially, designed for easy multi-user extension later. Full Supabase
 | PWA | vite-plugin-pwa (mobile-first, installable) |
 | Backend | Python / FastAPI |
 | Database | Supabase (PostgreSQL + Auth + RLS) |
-| LLM | OpenAI API (GPT-4o) — bring your own key |
+| LLM | OpenAI API (GPT-4o) — server-managed key (`OPENAI_API_KEY` env var) |
 | Deployment | Hetzner VPS, nginx, systemd |
 
 ## Architecture
@@ -34,7 +34,7 @@ Backend-centric LLM approach: all LLM calls go through the FastAPI backend. The 
 
 ### Why Backend-Centric
 
-- API key stays server-side (encrypted at rest with Fernet, decrypted only for OpenAI calls)
+- API key stays server-side (single `OPENAI_API_KEY` environment variable)
 - Single place for prompt engineering and structured output parsing
 - Backend controls all data persistence — no split logic
 - SSE streaming keeps the UX responsive
@@ -97,14 +97,6 @@ Backend-centric LLM approach: all LLM calls go through the FastAPI backend. The 
 | content | text | |
 | created_at | timestamptz | |
 
-### user_api_keys
-
-| Column | Type | Notes |
-|--------|------|-------|
-| user_id | UUID, FK → users | PK |
-| provider | text | "openai" (extensible) |
-| encrypted_key | text | Encrypted server-side with Fernet |
-
 ## API Endpoints
 
 ### Auth
@@ -132,9 +124,6 @@ Backend-centric LLM approach: all LLM calls go through the FastAPI backend. The 
 
 ### Manual Corrections
 - `PATCH /food-entries/{id}` — Manual calorie override
-
-### Settings
-- `PATCH /settings/api-key` — Update OpenAI API key
 
 ## LLM Prompt Strategy
 
@@ -226,9 +215,10 @@ Food entries injected into the system prompt include their database IDs. The LLM
 
 1. **Auth pages** — Register and login forms (email/password)
 2. **Onboarding wizard** — Step-by-step form flow:
-   - Gender → Age → Height (cm) → Current weight (kg) → Activity level → Target weight → Review calorie target → API key input
+   - Gender → Age → Height (cm) → Current weight (kg) → Activity level → Target weight → Review calorie target
    - Review: shows auto-calculated daily calorie target (Mifflin-St Jeor + deficit)
    - Override option: let user adjust the target
+   - No API key input — the key is managed server-side
 3. **Main chat view** (primary screen):
    - Top bar: today's stats (calories consumed / target, progress bar, today's weight)
    - Chat area: scrollable conversation (hidden scrollbar), auto-scroll to latest
@@ -241,7 +231,7 @@ Food entries injected into the system prompt include their database IDs. The LLM
    - Weight trend line chart (Recharts)
    - Daily calorie bar chart with target reference line
    - Cards display side-by-side on desktop (2-column grid)
-5. **Settings** — Update OpenAI API key, view current calorie target
+5. **Settings** — View current calorie target
 
 ### Dark Mode
 
@@ -261,7 +251,7 @@ Food entries injected into the system prompt include their database IDs. The LLM
 - **Supabase Auth** for user management (email/password)
 - **JWT validation** supports both ES256 (JWKS, newer Supabase projects) and HS256 (shared secret)
 - **Row-Level Security (RLS)** on all tables — users can only read/write their own data
-- **API key encryption:** keys encrypted server-side with Fernet symmetric encryption before storage, decrypted only in memory when making OpenAI calls. Encryption key stored as env var.
+- **OpenAI API key:** single server-managed key via `OPENAI_API_KEY` environment variable (no per-user keys)
 - **FastAPI middleware** validates Supabase JWT on every request
 - **Onboarding gate:** ProtectedRoute checks onboarding completion via dashboard endpoint, redirects unonboarded users
 
@@ -328,7 +318,7 @@ All "today" logic uses the user's configured timezone (stored in `user_profiles.
 - Responsive layout (mobile bottom nav + desktop sidebar)
 - Dark mode (light/dark/system)
 - Mobile-first PWA
-- Bring your own OpenAI API key
+- Server-managed OpenAI API key
 - VPS deployment with nginx + systemd
 
 **Out of scope (future):**
