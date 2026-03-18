@@ -7,7 +7,6 @@ from supabase import Client
 
 from app.dependencies import get_current_user, get_supabase
 from app.services.calorie import calculate_daily_target
-from app.services.crypto import encrypt_api_key
 
 router = APIRouter(tags=["onboarding"])
 

@@ -10,7 +10,7 @@ from sse_starlette.sse import EventSourceResponse
 from supabase import Client
 
 from app.dependencies import get_current_user, get_supabase
-from app.services.crypto import decrypt_api_key
+from app.config import settings
 from app.services.llm import build_system_prompt, parse_llm_response
 
 router = APIRouter(tags=["chat"])
