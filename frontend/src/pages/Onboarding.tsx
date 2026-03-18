@@ -10,7 +10,7 @@ const ACTIVITY_LEVELS = [
   { value: "very_active", label: "Very Active (physical job + exercise)" },
 ];
 
-type Step = "gender" | "age" | "height" | "weight" | "activity" | "target" | "review" | "apikey";
+type Step = "gender" | "age" | "height" | "weight" | "activity" | "target" | "review";
 
 export function Onboarding() {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export function Onboarding() {
   const [targetWeightKg, setTargetWeightKg] = useState("");
   const [calorieTarget, setCalorieTarget] = useState<number | null>(null);
   const [calorieOverride, setCalorieOverride] = useState("");
-  const [apiKey, setApiKey] = useState("");
 
   const calculatePreview = () => {
     const w = parseFloat(weightKg);
@@ -62,7 +61,6 @@ export function Onboarding() {
         target_weight_kg: parseFloat(targetWeightKg),
         daily_calorie_target: parseInt(calorieOverride),
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        openai_api_key: apiKey,
       }),
     });
 
@@ -83,8 +81,7 @@ export function Onboarding() {
     weight: { title: "What's your current weight?", next: "activity", prev: "height" },
     activity: { title: "What's your activity level?", next: "target", prev: "weight" },
     target: { title: "What's your target weight?", next: "review", prev: "activity" },
-    review: { title: "Your daily calorie target", next: "apikey", prev: "target" },
-    apikey: { title: "Connect OpenAI", next: null, prev: "review" },
+    review: { title: "Your daily calorie target", next: null, prev: "target" },
   };
 
   const goNext = () => {
@@ -107,7 +104,6 @@ export function Onboarding() {
       case "activity": return !!activityLevel;
       case "target": return !!targetWeightKg && parseFloat(targetWeightKg) < parseFloat(weightKg);
       case "review": return !!calorieOverride && parseInt(calorieOverride) >= 1200;
-      case "apikey": return apiKey.startsWith("sk-");
       default: return false;
     }
   };
@@ -203,17 +199,6 @@ export function Onboarding() {
             </div>
           )}
 
-          {step === "apikey" && (
-            <div className="space-y-3">
-              <input type="password" placeholder="sk-..." value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 outline-none font-mono text-sm" />
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Your API key is encrypted and stored securely. It's only used to
-                make calls to OpenAI on your behalf.
-              </p>
-            </div>
-          )}
         </div>
 
         <div className="flex gap-3">
