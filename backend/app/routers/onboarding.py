@@ -20,7 +20,6 @@ class OnboardingRequest(BaseModel):
     target_weight_kg: float
     daily_calorie_target: int | None = None
     timezone: str = "UTC"
-    openai_api_key: str
 
     @field_validator("gender")
     @classmethod
@@ -78,11 +77,6 @@ async def onboarding(
         {"user_id": user_id, "date": today, "weight_kg": body.weight_kg, "total_calories": 0},
         on_conflict="user_id,date",
     ).execute()
-
-    encrypted = encrypt_api_key(body.openai_api_key)
-    supabase.table("user_api_keys").upsert({
-        "user_id": user_id, "provider": "openai", "encrypted_key": encrypted,
-    }).execute()
 
     return OnboardingResponse(
         daily_calorie_target=calorie_target,
