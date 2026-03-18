@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr
 from supabase import Client
 
@@ -18,7 +17,7 @@ class AuthResponse(BaseModel):
     user_id: str
 
 
-@router.post("/register")
+@router.post("/register", response_model=AuthResponse)
 async def register(body: AuthRequest, supabase: Client = Depends(get_supabase)):
     try:
         result = supabase.auth.sign_up(
@@ -26,17 +25,10 @@ async def register(body: AuthRequest, supabase: Client = Depends(get_supabase)):
         )
         if not result.user:
             raise HTTPException(status_code=400, detail="Registration failed")
-        if not result.session:
-            return JSONResponse(
-                status_code=202,
-                content={"detail": "Check your email to confirm your account before logging in."},
-            )
         return AuthResponse(
             access_token=result.session.access_token,
             user_id=result.user.id,
         )
-    except HTTPException:
-        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
