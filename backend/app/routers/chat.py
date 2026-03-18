@@ -181,14 +181,6 @@ async def chat(
     if not profile.data or not profile.data.get("onboarding_completed"):
         raise HTTPException(status_code=400, detail="Onboarding not completed")
 
-    api_key_row = (
-        supabase.table("user_api_keys").select("encrypted_key")
-        .eq("user_id", user_id).single().execute()
-    )
-    if not api_key_row.data:
-        raise HTTPException(status_code=400, detail="No API key configured")
-
-    api_key = decrypt_api_key(api_key_row.data["encrypted_key"])
     date = _get_user_date(supabase, user_id)
     daily_log = _get_or_create_daily_log(supabase, user_id, date)
     daily_log_id = daily_log["id"]
@@ -228,7 +220,7 @@ async def chat(
         messages.append({"role": msg["role"], "content": msg["content"]})
     messages.append({"role": "user", "content": body.message})
 
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=settings.openai_api_key)
     try:
         completion = client.chat.completions.create(model="gpt-4o", messages=messages)
         full_response = completion.choices[0].message.content
