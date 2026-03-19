@@ -22,9 +22,11 @@ Add after existing instruction #2:
 
 This prevents unnecessary back-and-forth for obvious items while catching the cases where ambiguity causes the most error.
 
+When asking a clarifying question (no food logged yet), the LLM should still include the JSON block with empty `food_entries` and null `weight_kg`. The existing parsing fallback handles the case where it doesn't, but being explicit avoids inconsistency.
+
 ### 2. Few-shot calorie reference examples
 
-Add a `CALORIE REFERENCE EXAMPLES` section with ~10 common foods and realistic calorie values:
+Add a `CALORIE REFERENCE EXAMPLES` section between the INSTRUCTIONS and RESPONSE FORMAT blocks, with ~10 common foods and realistic calorie values:
 
 - 1 large egg (boiled): 78 kcal
 - 1 cup cooked oatmeal: 150 kcal
