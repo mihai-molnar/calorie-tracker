@@ -96,3 +96,14 @@ def test_build_system_prompt_includes_entries():
     assert "abc-123" in prompt
     assert "3 boiled eggs" in prompt
     assert "210" in prompt
+
+
+def test_build_system_prompt_includes_clarification_instruction():
+    prompt = build_system_prompt(
+        age=30, gender="male", height_cm=180,
+        latest_weight=89.2, target_weight_kg=80,
+        daily_calorie_target=2400, date="2026-03-15",
+        today_weight=89.2, food_entries=[], total_calories=0,
+    )
+    assert "ambiguous about portion size" in prompt
+    assert "~100 kcal" in prompt
