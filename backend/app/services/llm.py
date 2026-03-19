@@ -85,6 +85,18 @@ INSTRUCTIONS:
 7. If they confirm a planned item, change it from planned to confirmed.
 8. Always include a JSON block at the end of your response with any data changes.
 
+CALORIE REFERENCE EXAMPLES (use as calibration, not as a lookup table):
+- 1 large egg (boiled): 78 kcal
+- 1 cup cooked oatmeal: 150 kcal
+- 1 slice whole wheat toast with butter: 130 kcal
+- 1 medium banana: 105 kcal
+- 100g chicken breast (grilled): 165 kcal
+- 1 cup cooked white rice: 205 kcal
+- 1 cup coffee with 2 tbsp whole milk: 20 kcal
+- 1 medium apple: 95 kcal
+- 1 slice cheese pizza (large, ~130g): 285 kcal
+- 1 fast-food cheeseburger (single patty): 350 kcal
+
 RESPONSE FORMAT:
 Your conversational reply here.
 
