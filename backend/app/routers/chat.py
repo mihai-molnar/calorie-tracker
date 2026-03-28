@@ -37,6 +37,7 @@ def _check_rate_limit(user_id: str) -> None:
 
 class ChatRequest(BaseModel):
     message: str
+    image: str | None = None
 
 
 def _get_user_date(supabase: Client, user_id: str) -> str:
@@ -211,14 +212,24 @@ async def chat(
         total_calories=daily_log.get("total_calories", 0),
     )
 
+    stored_content = f"[Photo] {body.message}" if body.image else body.message
     supabase.table("chat_messages").insert({
-        "daily_log_id": daily_log_id, "role": "user", "content": body.message,
+        "daily_log_id": daily_log_id, "role": "user", "content": stored_content,
     }).execute()
 
     messages = [{"role": "system", "content": system_prompt}]
     for msg in chat_history:
         messages.append({"role": msg["role"], "content": msg["content"]})
-    messages.append({"role": "user", "content": body.message})
+
+    if body.image:
+        user_content = [
+            {"type": "text", "text": body.message or "What's in this photo?"},
+            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{body.image}"}},
+        ]
+    else:
+        user_content = body.message
+
+    messages.append({"role": "user", "content": user_content})
 
     client = OpenAI(api_key=settings.openai_api_key)
     try:
