@@ -24,12 +24,15 @@ class DailyLogEntry(BaseModel):
 class DashboardResponse(BaseModel):
     today: TodaySummary
     history: list[DailyLogEntry]
+    has_more: bool
 
 
 @router.get("/dashboard", response_model=DashboardResponse)
 async def dashboard(
     user_id: str = Depends(get_current_user),
     supabase: Client = Depends(get_supabase),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=30, ge=1, le=90),
 ):
     from app.routers.chat import _get_user_date, _get_or_create_daily_log
 
@@ -52,15 +55,19 @@ async def dashboard(
     history_data = (
         supabase.table("daily_logs")
         .select("date, weight_kg, total_calories")
-        .eq("user_id", user_id).order("date", desc=True).limit(30).execute()
+        .eq("user_id", user_id).order("date", desc=True)
+        .range(offset, offset + limit).execute()
     )
+    # Fetch limit+1 rows to determine has_more
+    has_more = len(history_data.data) > limit
+    rows = history_data.data[:limit]
     history = [
         DailyLogEntry(date=d["date"], weight_kg=d.get("weight_kg"),
                       total_calories=d.get("total_calories", 0))
-        for d in history_data.data
+        for d in rows
     ]
 
-    return DashboardResponse(today=today, history=history)
+    return DashboardResponse(today=today, history=history, has_more=has_more)
 
 
 @router.get("/daily-logs", response_model=list[DailyLogEntry])
